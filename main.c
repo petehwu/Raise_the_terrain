@@ -4,6 +4,10 @@
 int main(void)
 {
 	SDL_Instance instance;
+	char filename[20] = "";
+
+	printf("Enter the filename(20 characters max) to use:\n");
+	scanf("%s", filename);
 
 	if (init_instance(&instance) != 0)
 		return (1);
@@ -14,7 +18,7 @@ int main(void)
 		SDL_RenderClear(instance.renderer);
 		if (poll_events() == 1)
 			break;
- 		draw_stuff(instance);
+ 		draw_stuff(instance, filename);
 		SDL_RenderPresent(instance.renderer);
 	}
 	SDL_DestroyRenderer(instance.renderer);
