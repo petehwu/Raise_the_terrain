@@ -10,7 +10,7 @@ typedef struct SDL_Instance
 } SDL_Instance;
 
 int init_instance(SDL_Instance *);
-void draw_stuff(SDL_Instance instance);
+void draw_stuff(SDL_Instance instance, char *filename);
 int poll_events();
 
 #endif
