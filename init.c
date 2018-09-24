@@ -4,7 +4,8 @@ void draw_stuff(SDL_Instance instance, char *filename)
 {
 	FILE *ifp;
 	char *mode = "r";
-	int sx, sy, tx, ty;
+	int row, col;
+	int sx, sy, sz, tx, ty, tz;
 	int ssx, ssy, ttx, tty;
 
 	ifp = fopen(filename, mode);
@@ -14,25 +15,19 @@ void draw_stuff(SDL_Instance instance, char *filename)
 		exit(1);
 	}
 	SDL_SetRenderDrawColor(instance.renderer, 0XFF, 0XFF, 0XFF, 0XFF);
-	while( fscanf(ifp, "%d, %d, %d, %d", &sx, &sy, &tx, &ty) != EOF)
-	{ /* sx -=250, sy -= 200, tx -= 250, ty -= 200 */
-		sx -= 250;
-		sy -= 200;
-		tx -= 200;
-		ty -= 150;
+	while( fscanf(ifp, "%d, %d, %d, %d, %d, %d", &sx, &sy, &sz, &tx, &ty, &tz) != EOF)
+	{ 
 		ssx = .7 * sx - .7 * sy;
-		ssy = (1 - .7) * sx + (1 - .7) * sy;
-		 
+		ssy = (1 - .7) * sx + (1 - .7) * sy - sz;
 		ttx = .7 * tx - .7 * ty;
-		tty = (1 - .7) * tx + (1 - .7) * ty;
+		tty = (1 - .7) * tx + (1 - .7) * ty - tz;
 		SDL_RenderDrawLine(instance.renderer, ssx, ssy, ttx, tty);
-		
-	}
-	fclose(ifp);
 
+	}
+
+	fclose(ifp); 
 
 }
-
 int init_instance(SDL_Instance *instance) 
 {
 	/*init SDL*/
