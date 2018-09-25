@@ -7,6 +7,7 @@ void draw_stuff(SDL_Instance instance, char *filename)
 	int row, col;
 	int sx, sy, sz, tx, ty, tz;
 	int ssx, ssy, ttx, tty;
+	int i;
 
 	ifp = fopen(filename, mode);
 	if (!ifp)
@@ -14,16 +15,30 @@ void draw_stuff(SDL_Instance instance, char *filename)
 		fprintf(stderr, "Can't open input file %s\n", filename);
 		exit(1);
 	}
-	SDL_SetRenderDrawColor(instance.renderer, 0XFF, 0XFF, 0XFF, 0XFF);
-	while( fscanf(ifp, "%d, %d, %d, %d, %d, %d", &sx, &sy, &sz, &tx, &ty, &tz) != EOF)
-	{ 
-		ssx = .7 * sx - .7 * sy;
-		ssy = (1 - .7) * sx + (1 - .7) * sy - sz;
-		ttx = .7 * tx - .7 * ty;
-		tty = (1 - .7) * tx + (1 - .7) * ty - tz;
-		SDL_RenderDrawLine(instance.renderer, ssx, ssy, ttx, tty);
+	for (i = 0; i <= 500; i++)
+	{
+		SDL_SetRenderDrawColor(instance.renderer, 0,0,0,0);
+		SDL_RenderClear(instance.renderer);
+		SDL_SetRenderDrawColor(instance.renderer, 0XFF, 0XFF, 0XFF, 0XFF);
+		while( fscanf(ifp, "%d, %d, %d, %d, %d, %d", &sx, &sy, &sz, &tx, &ty, &tz) != EOF)
+		{ 
+			ssx = .7 * sx - .7 * sy;
+			ssy = (1 - .7) * sx + (1 - .7) * sy - (sz * (i * .002));
+			ttx = .7 * tx - .7 * ty;
+			tty = (1 - .7) * tx + (1 - .7) * ty - (tz * (i * .002));
+			SDL_RenderDrawLine(instance.renderer, ssx, ssy, ttx, tty);
 
+		}
+		SDL_RenderPresent(instance.renderer);
+		if (i == 500)
+			SDL_Delay(8000);
+		else
+		 SDL_Delay(50);
+		rewind(ifp);
+		if (poll_events() == 1)
+			exit(0);
 	}
+
 
 	fclose(ifp); 
 
