@@ -1,2 +1,2 @@
 #!/bin/bash
-gcc *.c `sdl2-config --libs` `sdl2-config --cflags` -lSDL2_ttf
+gcc -Wall -Werror -Wextra -pedantic *.c -o terrain `sdl2-config --libs` `sdl2-config --cflags` -lSDL2_ttf
