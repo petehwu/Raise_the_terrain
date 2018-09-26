@@ -1,22 +1,20 @@
 #include "header.h"
 #include "stdio.h"
-
+/**
+ * draw_stuff - draws the matrix on the screen
+ * @instance: the SDL_Instance window to draw the lines on
+ * @filename: name of the file containing the final z axis values
+ */
 void draw_stuff(SDL_Instance instance, char *filename)
 {
 	FILE *ifp;
-	  char *mode = "r";
-	int row, col;
-	int sx, sy, tx, ty;
-	int ssx, ssy, ttx, tty, r = 0, rn = 1, c = 0, n = 1, i;
+	char *mode = "r";
+	int row, col,  r = 0, rn = 1, c = 0, n = 1, i;
+	coord *cd = malloc(sizeof(coord));
 	int z[8][8] = {
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0}
+		{0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0}
 	};
 
 	ifp = fopen(filename, mode);
@@ -26,91 +24,52 @@ void draw_stuff(SDL_Instance instance, char *filename)
 		exit(1);
 	}
 	for (i = 0; i < 8; i++)
-		fscanf(ifp, "%d %d %d %d %d %d %d %d", &z[i][0], &z[i][1], &z[i][2], &z[i][3],
-			&z[i][4], &z[i][5], &z[i][6], &z[i][7]);	
+		fscanf(ifp, "%d %d %d %d %d %d %d %d", &z[i][0], &z[i][1],
+				&z[i][2], &z[i][3], &z[i][4], &z[i][5], &z[i][6], &z[i][7]);
 	fclose(ifp);
-
-for (i = 0; i <= 500; i++)
-{
-	r = 0;
-	rn = 1;
-	c = 0;
-	n = 1;
-	SDL_SetRenderDrawColor(instance.renderer, 0,0,0,0);
-	SDL_RenderClear(instance.renderer);
-	SDL_SetRenderDrawColor(instance.renderer, 0XFF, 0XFF, 0XFF, 0XFF);
-	for (row = -200; row <= 490; row +=115 )
+	for (i = 0; i <= 500; i++, r = 0, rn = 1, c = 0, n = 1)
 	{
-		for (col = 650; col <= 1340; col+=115)
+		SDL_SetRenderDrawColor(instance.renderer, 0, 0, 0, 0);
+		SDL_RenderClear(instance.renderer);
+		SDL_SetRenderDrawColor(instance.renderer, 0XFF, 0XFF, 0XFF, 0XFF);
+		for (row = -200; row <= 490; row += 115, r++, rn++, c = 0, n = 1)
 		{
-			sx = col;
-			sy = row;
-			tx = col + 115;
-			ty = row;
-			ssx = .7 * sx - .7 * sy;
-			ssy = (1 - .7) * sx + (1 - .7) * sy - (z[r][c] * (i * .002));
-			ttx = .7 * tx - .7 * ty;
-			tty = (1 - .7) * tx + (1 - .7) * ty - (z[r][n] * (i * .002)); 
-			SDL_RenderDrawLine(instance.renderer, ssx, ssy, ttx, tty);
-			//SDL_RenderDrawLine(instance.renderer, sx, sy, tx, ty);
-			sx = col;
-			sy = row;
-			tx = col;
-			ty = row + 115;
-			ssx = .7 * sx - .7 * sy;
-			ssy = (1 - .7) * sx + (1 - .7) * sy - (z[r][c] * (i * .002));
-			ttx = .7 * tx - .7 * ty;
-			tty = (1 - .7) * tx + (1 - .7) * ty - (z[rn][c] * (i * .002));
-			SDL_RenderDrawLine(instance.renderer, ssx, ssy, ttx, tty);
-			//SDL_RenderDrawLine(instance.renderer, sx, sy, tx, ty);
-			if (row == 490)
+			for (col = 650; col <= 1340; col += 115, c++, n++)
 			{
-				sx = col;
-				sy = row + 115;
-				tx = col + 115;
-				ty = row + 115;
-				ssx = .7 * sx - .7 * sy;
-				ssy = (1 - .7) * sx + (1 - .7) * sy - (z[rn][c] * (i * .002));
-				ttx = .7 * tx - .7 * ty;
-				tty = (1 - .7) * tx + (1 - .7) * ty - (z[rn][n] * (i * .002));
-				SDL_RenderDrawLine(instance.renderer, ssx, ssy, ttx, tty);
-				//SDL_RenderDrawLine(instance.renderer, sx, sy, tx, ty);
+				cd = calc_hori(cd, row, col, z[r][c], z[r][n], i);
+				SDL_RenderDrawLine(instance.renderer, cd->ssx, cd->ssy, cd->ttx, cd->tty);
+				cd = calc_vert(cd, row, col, z[r][c], z[rn][c], i);
+				SDL_RenderDrawLine(instance.renderer, cd->ssx, cd->ssy, cd->ttx, cd->tty);
+				if (row == 490)
+				{
+					cd = calc_hori(cd, row + 115, col, z[rn][c], z[rn][n], i);
+					SDL_RenderDrawLine(instance.renderer, cd->ssx, cd->ssy, cd->ttx, cd->tty);
+				}
 			}
-			c++;
-			n++;
+			cd = calc_vert(cd, row, col, z[r][7], z[rn][7], i);
+			SDL_RenderDrawLine(instance.renderer, cd->ssx, cd->ssy, cd->ttx, cd->tty);
 		}
-		sx = col;
-		sy = row;
-		tx = col;
-		ty = row + 115;
-		ssx = .7 * sx - .7 * sy;
-		ssy = (1 - .7) * sx + (1 - .7) * sy - (z[r][7] * (i * .002));
-		ttx = .7 * tx - .7 * ty;
-		tty = (1 - .7) * tx + (1 - .7) * ty - (z[rn][7] * (i * .002));
-		SDL_RenderDrawLine(instance.renderer, ssx, ssy, ttx, tty);
-		//SDL_RenderDrawLine(instance.renderer, sx, sy, tx, ty);
-		r++;
-		rn++;
-		c = 0;
-		n = 1;
-
-	}
-	SDL_RenderPresent(instance.renderer);
-	if (i == 500)
-		SDL_Delay(8000);
-	else
-		SDL_Delay(15);
-	if (poll_events() == 1)
-	{
-		SDL_DestroyRenderer(instance.renderer);
-		SDL_DestroyWindow(instance.window);
-		SDL_Quit();
-		exit(0);
+		SDL_RenderPresent(instance.renderer);
+		if (i == 500)
+			SDL_Delay(8000);
+		else
+			SDL_Delay(15);
+		if (poll_events() == 1)
+		{
+			SDL_DestroyRenderer(instance.renderer);
+			SDL_DestroyWindow(instance.window);
+			SDL_Quit();
+			exit(0);
+		}
 	}
 }
 
-}
-int init_instance(SDL_Instance *instance) 
+/**
+ * init_instance - initializes the SDL instance
+ * @instance: pointer to SDL_Instance to initialize
+ * Return: integer of instance number
+ */
+int init_instance(SDL_Instance *instance)
 {
 	/*init SDL*/
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -139,8 +98,11 @@ int init_instance(SDL_Instance *instance)
 	}
 	return (0);
 }
-
-int poll_events()
+/**
+ * poll_events - polls for keyboard input
+ * Return: 1 if escape key is pressed
+ */
+int poll_events(void)
 {
 	SDL_Event event;
 	SDL_KeyboardEvent key;
