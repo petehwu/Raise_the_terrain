@@ -4,6 +4,20 @@
 #include <SDL2/SDL.h>
 #include <unistd.h>
 /**
+ * struct roto_s- keeps track of z axis values and left and right key presses to rotate the rendered image
+ * @left: number of times left key pressed
+ * @right: number of times right key pressed
+ */
+
+typedef struct roto_s {
+        int left;
+        int right;
+	int z[8][8];
+} roto;
+
+extern coord *coords;
+
+/**
  * struct SDL_Instance - SDL Instance for the window and the rendered
  * @window: window to draw in
  * @renderer: renderer

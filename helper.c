@@ -1,5 +1,6 @@
 #include "header.h"
 
+
 /**
  * calc_vert - calculates coordinates for the vertical lines
  * @coords: struct containing coordinates

@@ -7,16 +7,12 @@
  */
 void draw_stuff(SDL_Instance instance, char *filename)
 {
-	FILE *ifp;
-	char *mode = "r";
+	/*FILE *ifp;
+	char *mode = "r"; */
 	int row, col,  r = 0, rn = 1, c = 0, n = 1, i;
 	coord *cd = malloc(sizeof(coord));
-	int z[8][8] = {
-		{0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0}
 	};
-
+/*
 	ifp = fopen(filename, mode);
 	if (!ifp)
 	{
@@ -27,6 +23,7 @@ void draw_stuff(SDL_Instance instance, char *filename)
 		fscanf(ifp, "%d %d %d %d %d %d %d %d", &z[i][0], &z[i][1],
 				&z[i][2], &z[i][3], &z[i][4], &z[i][5], &z[i][6], &z[i][7]);
 	fclose(ifp);
+	*/
 	for (i = 0; i <= 500; i++, r = 0, rn = 1, c = 0, n = 1)
 	{
 		SDL_SetRenderDrawColor(instance.renderer, 0, 0, 0, 0);
@@ -36,17 +33,17 @@ void draw_stuff(SDL_Instance instance, char *filename)
 		{
 			for (col = 650; col <= 1340; col += 115, c++, n++)
 			{
-				cd = calc_hori(cd, row, col, z[r][c], z[r][n], i);
+				cd = calc_hori(cd, row, col, roto->z[r][c], roto->z[r][n], i);
 				SDL_RenderDrawLine(instance.renderer, cd->ssx, cd->ssy, cd->ttx, cd->tty);
-				cd = calc_vert(cd, row, col, z[r][c], z[rn][c], i);
+				cd = calc_vert(cd, row, col, roto->z[r][c], roto->z[rn][c], i);
 				SDL_RenderDrawLine(instance.renderer, cd->ssx, cd->ssy, cd->ttx, cd->tty);
 				if (row == 490)
 				{
-					cd = calc_hori(cd, row + 115, col, z[rn][c], z[rn][n], i);
+					cd = calc_hori(cd, row + 115, col, roto->z[rn][c], roto->z[rn][n], i);
 					SDL_RenderDrawLine(instance.renderer, cd->ssx, cd->ssy, cd->ttx, cd->tty);
 				}
 			}
-			cd = calc_vert(cd, row, col, z[r][7], z[rn][7], i);
+			cd = calc_vert(cd, row, col, roto->z[r][7], roto->z[rn][7], i);
 			SDL_RenderDrawLine(instance.renderer, cd->ssx, cd->ssy, cd->ttx, cd->tty);
 		}
 		SDL_RenderPresent(instance.renderer);
@@ -116,6 +113,10 @@ int poll_events(void)
 			case SDL_KEYDOWN:
 				key = event.key;
 				/* if 'escape' is present */
+				if (key.keysym.scancode == SDL_SCANCODE_LEFT)
+					printf("left key pressed\n");
+				if (key.keysym.scancode == SDL_SCANCODE_RIGHT)
+					printf("Right key pressed\n");
 				if (key.keysym.scancode == 0x29)
 					return (1);
 				break;
