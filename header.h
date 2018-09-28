@@ -3,19 +3,25 @@
 
 #include <SDL2/SDL.h>
 #include <unistd.h>
+#include <math.h>
+
+#define SQUARE_SIZE 100
 /**
- * struct roto_s- keeps track of z axis values and left and right key presses to rotate the rendered image
+ * struct rotation_s- keeps track of z axis values and
+ * left and right key presses to rotate the rendered image
  * @left: number of times left key pressed
  * @right: number of times right key pressed
+ * @z: z coordinates read in from file
  */
 
-typedef struct roto_s {
-        int left;
-        int right;
+typedef struct rotation_s
+{
+	int left;
+	int right;
 	int z[8][8];
-} roto;
+} rotation;
 
-extern coord *coords;
+extern rotation *roto;
 
 /**
  * struct SDL_Instance - SDL Instance for the window and the rendered
@@ -44,9 +50,11 @@ typedef struct coord_s
 } coord;
 
 int init_instance(SDL_Instance *);
-void draw_stuff(SDL_Instance instance, char *filename);
+void draw_stuff(SDL_Instance instance);
 int poll_events(void);
 coord *calc_vert(coord *coords, int row, int col, int z1, int z2, int i);
 coord *calc_hori(coord *coords, int row, int col, int z1, int z2, int i);
+int init_roto(char *filename);
+void do_exit(SDL_Instance instance, coord *cd);
 
 #endif

@@ -3,61 +3,47 @@
 /**
  * draw_stuff - draws the matrix on the screen
  * @instance: the SDL_Instance window to draw the lines on
- * @filename: name of the file containing the final z axis values
  */
-void draw_stuff(SDL_Instance instance, char *filename)
+void draw_stuff(SDL_Instance instance)
 {
-	/*FILE *ifp;
-	char *mode = "r"; */
-	int row, col,  r = 0, rn = 1, c = 0, n = 1, i;
+	int row, col,  r = 0, rn = 1, c = 0, n = 1, i, x_start = 650, y_start = -200;
 	coord *cd = malloc(sizeof(coord));
-	};
-/*
-	ifp = fopen(filename, mode);
-	if (!ifp)
-	{
-		fprintf(stderr, "Can't open input file %s\n", filename);
-		exit(1);
-	}
-	for (i = 0; i < 8; i++)
-		fscanf(ifp, "%d %d %d %d %d %d %d %d", &z[i][0], &z[i][1],
-				&z[i][2], &z[i][3], &z[i][4], &z[i][5], &z[i][6], &z[i][7]);
-	fclose(ifp);
-	*/
+
 	for (i = 0; i <= 500; i++, r = 0, rn = 1, c = 0, n = 1)
 	{
 		SDL_SetRenderDrawColor(instance.renderer, 0, 0, 0, 0);
 		SDL_RenderClear(instance.renderer);
 		SDL_SetRenderDrawColor(instance.renderer, 0XFF, 0XFF, 0XFF, 0XFF);
-		for (row = -200; row <= 490; row += 115, r++, rn++, c = 0, n = 1)
+		for (row = y_start; row <= ((SQUARE_SIZE * 6) + y_start);
+				row += SQUARE_SIZE, r++, rn++, c = 0, n = 1)
 		{
-			for (col = 650; col <= 1340; col += 115, c++, n++)
+			for (col = x_start; col <= ((SQUARE_SIZE) * 6 + x_start);
+					col += SQUARE_SIZE, c++, n++)
 			{
 				cd = calc_hori(cd, row, col, roto->z[r][c], roto->z[r][n], i);
 				SDL_RenderDrawLine(instance.renderer, cd->ssx, cd->ssy, cd->ttx, cd->tty);
 				cd = calc_vert(cd, row, col, roto->z[r][c], roto->z[rn][c], i);
 				SDL_RenderDrawLine(instance.renderer, cd->ssx, cd->ssy, cd->ttx, cd->tty);
-				if (row == 490)
+				if (row == ((SQUARE_SIZE * 6) + y_start))
 				{
-					cd = calc_hori(cd, row + 115, col, roto->z[rn][c], roto->z[rn][n], i);
-					SDL_RenderDrawLine(instance.renderer, cd->ssx, cd->ssy, cd->ttx, cd->tty);
+					cd = calc_hori(cd, row + SQUARE_SIZE, col,
+							roto->z[rn][c], roto->z[rn][n], i);
+					SDL_RenderDrawLine(instance.renderer, cd->ssx,
+							cd->ssy, cd->ttx, cd->tty);
 				}
 			}
-			cd = calc_vert(cd, row, col, roto->z[r][7], roto->z[rn][7], i);
-			SDL_RenderDrawLine(instance.renderer, cd->ssx, cd->ssy, cd->ttx, cd->tty);
+			cd = calc_vert(cd, row, col, roto->z[r][7],
+					roto->z[rn][7], i);
+			SDL_RenderDrawLine(instance.renderer,
+					cd->ssx, cd->ssy, cd->ttx, cd->tty);
 		}
 		SDL_RenderPresent(instance.renderer);
 		if (i == 500)
-			SDL_Delay(8000);
+			SDL_Delay(800);
 		else
 			SDL_Delay(15);
 		if (poll_events() == 1)
-		{
-			SDL_DestroyRenderer(instance.renderer);
-			SDL_DestroyWindow(instance.window);
-			SDL_Quit();
-			exit(0);
-		}
+			do_exit(instance, cd);
 	}
 }
 
@@ -114,9 +100,9 @@ int poll_events(void)
 				key = event.key;
 				/* if 'escape' is present */
 				if (key.keysym.scancode == SDL_SCANCODE_LEFT)
-					printf("left key pressed\n");
+					roto->left++;
 				if (key.keysym.scancode == SDL_SCANCODE_RIGHT)
-					printf("Right key pressed\n");
+					roto->right++;
 				if (key.keysym.scancode == 0x29)
 					return (1);
 				break;
