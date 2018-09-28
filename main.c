@@ -1,5 +1,7 @@
 #include <SDL2/SDL.h>
 #include "header.h"
+
+rotation *roto = NULL;
 /**
  * main - main entry point to the program
  * @argc: number of arguments included
@@ -19,6 +21,14 @@ int main(int argc, char **argv)
 	filename = argv[1];
 	if (init_instance(&instance) != 0)
 		return (1);
+	roto = malloc(sizeof(rotation));
+	/* initialize all values in cd to 0*/
+	if (init_roto(filename))
+	{
+		free(roto);
+		exit(1);
+	}
+
 
 	while ("C is awesome")
 	{
@@ -26,11 +36,12 @@ int main(int argc, char **argv)
 		SDL_RenderClear(instance.renderer);
 		if (poll_events() == 1)
 			break;
-		draw_stuff(instance, filename);
+		draw_stuff(instance);
 		SDL_RenderPresent(instance.renderer);
 	}
 	SDL_DestroyRenderer(instance.renderer);
 	SDL_DestroyWindow(instance.window);
 	SDL_Quit();
+	free(roto);
 	return (0);
 }
