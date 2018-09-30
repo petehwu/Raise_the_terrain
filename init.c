@@ -6,7 +6,7 @@
  */
 void draw_stuff(SDL_Instance instance)
 {
-	int row, col,  r = 0, rn = 1, c = 0, n = 1, i, x_start = 650, y_start = -200;
+	int row, col,  r = 0, rn = 1, c = 0, n = 1, i, x_start = 775, y_start = -65;
 	coord *cd = malloc(sizeof(coord));
 
 	for (i = 0; i <= 500; i++, r = 0, rn = 1, c = 0, n = 1)
@@ -39,7 +39,7 @@ void draw_stuff(SDL_Instance instance)
 		}
 		SDL_RenderPresent(instance.renderer);
 		if (i == 500)
-			SDL_Delay(800);
+			SDL_Delay(400);
 		else
 			SDL_Delay(15);
 		if (poll_events() == 1)
@@ -100,9 +100,9 @@ int poll_events(void)
 				key = event.key;
 				/* if 'escape' is present */
 				if (key.keysym.scancode == SDL_SCANCODE_LEFT)
-					roto->left++;
+					roto->degree = (roto->degree + 10) % 360;
 				if (key.keysym.scancode == SDL_SCANCODE_RIGHT)
-					roto->right++;
+					roto->degree = (roto->degree - 10) % 360;
 				if (key.keysym.scancode == 0x29)
 					return (1);
 				break;
