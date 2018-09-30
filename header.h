@@ -5,19 +5,22 @@
 #include <unistd.h>
 #include <math.h>
 
-#define SQUARE_SIZE 100
+#define SQUARE_SIZE 70
+#define INCLINATION .7
 /**
- * struct rotation_s- keeps track of z axis values and
- * left and right key presses to rotate the rendered image
- * @left: number of times left key pressed
- * @right: number of times right key pressed
+ * struct rotation_s- keeps track of z axis values and angle to rotate
+ * @degree:  degrees of rotation
  * @z: z coordinates read in from file
+ *
+ * Description:
+ * each left key press will increase angle of rotation by 10 degrees
+ * each right key press will decrease angle of rotation by 10 degrees
+ *
  */
 
 typedef struct rotation_s
 {
-	int left;
-	int right;
+	int degree;
 	int z[8][8];
 } rotation;
 
