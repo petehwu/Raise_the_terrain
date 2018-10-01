@@ -6,7 +6,7 @@ draw a simple grid using isometric projection.
 
 ### Installaion:
 Prerequisite: You must have the gcc compiler and SDL2 package installed on your machine to run this code.
-1) Clone this repo by typing this into your command line: git clone https://github.com/petehwu/Raise\_the\_terrain.git
+1) Clone this repo by typing this into your command line: git clone https://github.com/petehwu/Raise_the_terrain.git
 2) change directory into the repo by typing: cd Raise\_the\_terrain
 3) Compile this code by typing: ./compile\_this inside the Raise\_the\_terrain folder
 4) Once compiled you can run the executable using either of the supplied z\_axis value files
