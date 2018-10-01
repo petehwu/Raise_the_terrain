@@ -4,7 +4,7 @@
 Learn how to use the SDL2 package in C to 
 draw a simple grid using isometric projection.
 
-###Installaion:
+### Installaion:
 Prerequisite: You must have the gcc compiler and SDL2 package installed on your machine to run this code.
 1) Clone this repo by typing this into your command line: git clone https://github.com/petehwu/Raise\_the\_terrain.git
 2) change directory into the repo by typing: cd Raise\_the\_terrain
